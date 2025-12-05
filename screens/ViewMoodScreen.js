@@ -1,26 +1,21 @@
+import { useContext } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { useMoods } from '../context/MoodContext';
+import MoodItem from '../components/MoodItem';
+import { MoodContext } from '../context/MoodContext';
 
 export default function ViewMoodScreen() {
-  const { moods } = useMoods();
+  const { moods } = useContext(MoodContext);
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Mood Log</Text>
       {moods.length === 0 ? (
-        <Text style={styles.emptyText}>No mood entries yet.</Text>
+        <Text>No moods logged yet.</Text>
       ) : (
         <FlatList
           data={moods}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text style={styles.emoji}>{item.mood}</Text>
-              <View style={styles.text}>
-                <Text style={styles.note}>{item.note || 'No note'}</Text>
-                <Text style={styles.date}>{new Date(item.date).toLocaleString()}</Text>
-              </View>
-            </View>
-          )}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <MoodItem mood={item} />}
         />
       )}
     </View>
@@ -28,11 +23,6 @@ export default function ViewMoodScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  emptyText: { fontSize: 18, textAlign: 'center', marginTop: 40, color: '#666' },
-  card: { flexDirection: 'row', alignItems: 'center', padding: 12, marginVertical: 6, backgroundColor: '#fff', borderRadius: 8 },
-  emoji: { fontSize: 28, marginRight: 12 },
-  text: { flex: 1 },
-  note: { fontSize: 16 },
-  date: { fontSize: 12, color: '#888', marginTop: 4 },
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
 });
